@@ -1,0 +1,156 @@
+CREATE TABLE Agencia (
+    Codigo_Agencia varchar(20)  NOT NULL,
+    Direccion varchar(20)  NOT NULL,
+    Nombre varchar(20)  NOT NULL,
+    CONSTRAINT Agencia_pk PRIMARY KEY (Codigo_Agencia)
+);
+
+-- Table: Boleta
+CREATE TABLE Boleta (
+    Numero_Boleta int  NOT NULL,
+    Direccion varchar(20)  NOT NULL,
+    Monto BINARY_FLOAT  NOT NULL,
+    CodigoSolicitud varchar(20)  NOT NULL,
+    CONSTRAINT Boleta_pk PRIMARY KEY (Numero_Boleta)
+);
+
+-- Table: Cliente
+CREATE TABLE Cliente (
+    CodigoCliente varchar  NOT NULL,
+    Nombre varchar(20)  NOT NULL,
+    Apellido varchar(20)  NOT NULL,
+    Usuario varchar(20)  NOT NULL,
+    ContraseñaHash varchar(20)  NOT NULL,
+    DNI int  NOT NULL,
+    Correo varchar  NOT NULL,
+    telefono int  NOT NULL,
+    CONSTRAINT Cliente_pk PRIMARY KEY (CodigoCliente)
+);
+
+-- Table: Detalle_Metodo
+CREATE TABLE Detalle_Metodo (
+    CodigoCliente varchar(20)  NOT NULL,
+    CodigoMetodo varchar(20)  NOT NULL,
+    CONSTRAINT Detalle_Metodo_pk PRIMARY KEY (CodigoCliente,CodigoMetodo)
+);
+
+-- Table: Detalle_Solicitud
+CREATE TABLE Detalle_Solicitud (
+    CodigoGuardaespaldas varchar(20)  NOT NULL,
+    CodigoSolicitud varchar(20)  NOT NULL,
+    CONSTRAINT Detalle_Solicitud_pk PRIMARY KEY (CodigoGuardaespaldas,CodigoSolicitud)
+);
+
+-- Table: Guardaespaldas
+CREATE TABLE Guardaespaldas (
+    CodigoGuardaespaldas varchar(20)  NOT NULL,
+    Nombre varchar(20)  NOT NULL,
+    Apellido varchar(20)  NOT NULL,
+    Usuario varchar(20)  NOT NULL,
+    Contraseñ_Hasha varchar(20)  NOT NULL,
+    DNI int  NOT NULL,
+    Correo varchar(20)  NOT NULL,
+    Telefono int  NOT NULL,
+    CodigoHorario int  NOT NULL,
+    Codigo_Agencia varchar(20)  NOT NULL,
+    CONSTRAINT Guardaespaldas_pk PRIMARY KEY (CodigoGuardaespaldas)
+);
+
+-- Table: Horario
+CREATE TABLE Horario (
+    CodigoHorario int  NOT NULL,
+    DiaInicio varchar(20)  NOT NULL,
+    DiaFin varchar(20)  NOT NULL,
+    HoraInicio TIMESTAMP  NOT NULL,
+    HoraFin TIMESTAMP  NOT NULL,
+    Remuneracion BINARY_FLOAT  NOT NULL,
+    CONSTRAINT Horario_pk PRIMARY KEY (CodigoHorario)
+);
+
+-- Table: Metodo De Pago
+CREATE TABLE MetodoDePago (
+    CodigoMetodo varchar(20)  NOT NULL,
+    NombreMetodo int  NOT NULL,
+    CONSTRAINT MetodoDePago_pk PRIMARY KEY (CodigoMetodo)
+);
+
+-- Table: Solicitud
+CREATE TABLE Solicitud (
+    CodigoSolicitud varchar(20)  NOT NULL,
+    FechaHoraInicio TIMESTAMP  NOT NULL,
+    FechaHoraFin TIMESTAMP  NOT NULL,
+    Costo BINARY_FLOAT  NOT NULL,
+    Direccion varchar(20)  NOT NULL,
+    CodigoCliente varchar(20)  NOT NULL,
+    CodigoVehiculo varchar(20)  NOT NULL,
+    CONSTRAINT Solicitud_pk PRIMARY KEY (CodigoSolicitud)
+);
+
+-- Table: Vehiculo
+CREATE TABLE Vehiculo (
+    CodigoVehiculo varchar(20)  NOT NULL,
+    Placa varchar(20)  NOT NULL,
+    Modelo varchar(20)  NOT NULL,
+    Color varchar(20)  NOT NULL,
+    CONSTRAINT Vehiculo_pk PRIMARY KEY (CodigoVehiculo)
+);
+
+
+ALTER TABLE Boleta ADD CONSTRAINT Boleta_Solicitud
+    FOREIGN KEY (CodigoSolicitud)
+    REFERENCES Solicitud (CodigoSolicitud)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+ALTER TABLE Detalle_Metodo ADD CONSTRAINT Detalle_Metodo_Cliente
+    FOREIGN KEY (CodigoCliente)
+    REFERENCES Cliente (CodigoCliente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+ALTER TABLE Detalle_Metodo ADD CONSTRAINT Detalle_Metodo_MetodoDePago
+    FOREIGN KEY (CodigoMetodo)
+    REFERENCES Metodo_De_Pago (CodigoMetodo)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+-- Reference: Detalle_Solicitud_Guardaespaldas (table: Detalle_Solicitud)
+ALTER TABLE Detalle_Solicitud ADD CONSTRAINT Detalle_Solicitud_Guardaespaldas
+    FOREIGN KEY (CodigoGuardaespaldas)
+    REFERENCES Guardaespaldas (CodigoGuardaespaldas)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+ALTER TABLE Detalle_Solicitud ADD CONSTRAINT Detalle_Solicitud_Solicitud
+    FOREIGN KEY (CodigoSolicitud)
+    REFERENCES Solicitud (CodigoSolicitud)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+ALTER TABLE Guardaespaldas ADD CONSTRAINT Guardaespaldas_Agencia
+    FOREIGN KEY (Codigo_Agencia)
+    REFERENCES Agencia (Codigo_Agencia)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+ALTER TABLE Guardaespaldas ADD CONSTRAINT Guardaespaldas_Horario
+    FOREIGN KEY (CodigoHorario)
+    REFERENCES Horario (CodigoHorario)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+ALTER TABLE Solicitud ADD CONSTRAINT Solicitud_Cliente
+    FOREIGN KEY (CodigoCliente)
+    REFERENCES Cliente (CodigoCliente)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+ALTER TABLE Solicitud ADD CONSTRAINT Solicitud_Vehiculo
+    FOREIGN KEY (CodigoVehiculo)
+    REFERENCES Vehiculo (CodigoVehiculo)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
