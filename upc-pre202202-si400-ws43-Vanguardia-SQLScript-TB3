@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2022-10-29 05:26:17.104
+-- Last modification date: 2022-10-29 06:36:26.253
 
 -- tables
 -- Table: Agencia
@@ -42,13 +42,13 @@ CREATE TABLE Cliente_MetodDePago (
 
 -- Table: Guardaespaldas
 CREATE TABLE Guardaespaldas (
-    CodigoGuardaespaldas int  NOT NULL,
-    Nombre int  NOT NULL,
-    Apellido int  NOT NULL,
-    Usuario int  NOT NULL,
-    ContrasenhiaHash int  NOT NULL,
+    CodigoGuardaespaldas varchar(50)  NOT NULL,
+    Nombre varchar(50)  NOT NULL,
+    Apellido varchar(50)  NOT NULL,
+    Usuario varchar(50)  NOT NULL,
+    ContrasenhiaHash varchar(50)  NOT NULL,
     DNI int  NOT NULL,
-    Correo int  NOT NULL,
+    Correo varchar(50)  NOT NULL,
     Telefono int  NOT NULL,
     Agencia_Codigo_Agencia varchar(50)  NOT NULL,
     Horario_CodigoHorario varchar(50)  NOT NULL,
@@ -57,9 +57,9 @@ CREATE TABLE Guardaespaldas (
 
 -- Table: Guardaespaldas_Solicitud
 CREATE TABLE Guardaespaldas_Solicitud (
-    Guardaespaldas_CodigoGuardaespaldas int  NOT NULL,
     Solicitud_CodigoSolicitud varchar(50)  NOT NULL,
-    CONSTRAINT Guardaespaldas_Solicitud_pk PRIMARY KEY  (Guardaespaldas_CodigoGuardaespaldas,Solicitud_CodigoSolicitud)
+    Guardaespaldas_CodigoGuardaespaldas varchar(50)  NOT NULL,
+    CONSTRAINT Guardaespaldas_Solicitud_pk PRIMARY KEY  (Solicitud_CodigoSolicitud)
 );
 
 -- Table: Horario
