@@ -1,0 +1,150 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2022-10-29 05:26:17.104
+
+-- tables
+-- Table: Agencia
+CREATE TABLE Agencia (
+    Codigo_Agencia varchar(50)  NOT NULL,
+    Direccion varchar(50)  NOT NULL,
+    Nombre varchar(50)  NOT NULL,
+    CONSTRAINT Agencia_pk PRIMARY KEY  (Codigo_Agencia)
+);
+
+-- Table: Boleta
+CREATE TABLE Boleta (
+    NumeroBoleta int  NOT NULL,
+    FechaEmision date  NOT NULL,
+    Direccion varchar(50)  NOT NULL,
+    Monto money  NOT NULL,
+    Solicitud_CodigoSolicitud varchar(50)  NOT NULL,
+    CONSTRAINT Boleta_pk PRIMARY KEY  (NumeroBoleta)
+);
+
+-- Table: Cliente
+CREATE TABLE Cliente (
+    CodigoCliente varchar(50)  NOT NULL,
+    Nombre varchar(50)  NOT NULL,
+    Apellido varchar(50)  NOT NULL,
+    Usuario varchar(50)  NOT NULL,
+    ContrasenhiaHash varchar(50)  NOT NULL,
+    DNI int  NOT NULL,
+    Correo varchar(50)  NOT NULL,
+    telefono int  NOT NULL,
+    CONSTRAINT Cliente_pk PRIMARY KEY  (CodigoCliente)
+);
+
+-- Table: Cliente_MetodDePago
+CREATE TABLE Cliente_MetodDePago (
+    MetodoDePago_CodigoMetodo varchar(50)  NOT NULL,
+    Cliente_CodigoCliente varchar(50)  NOT NULL,
+    CONSTRAINT Cliente_MetodDePago_pk PRIMARY KEY  (MetodoDePago_CodigoMetodo,Cliente_CodigoCliente)
+);
+
+-- Table: Guardaespaldas
+CREATE TABLE Guardaespaldas (
+    CodigoGuardaespaldas int  NOT NULL,
+    Nombre int  NOT NULL,
+    Apellido int  NOT NULL,
+    Usuario int  NOT NULL,
+    ContrasenhiaHash int  NOT NULL,
+    DNI int  NOT NULL,
+    Correo int  NOT NULL,
+    Telefono int  NOT NULL,
+    Agencia_Codigo_Agencia varchar(50)  NOT NULL,
+    Horario_CodigoHorario varchar(50)  NOT NULL,
+    CONSTRAINT Guardaespaldas_pk PRIMARY KEY  (CodigoGuardaespaldas)
+);
+
+-- Table: Guardaespaldas_Solicitud
+CREATE TABLE Guardaespaldas_Solicitud (
+    Guardaespaldas_CodigoGuardaespaldas int  NOT NULL,
+    Solicitud_CodigoSolicitud varchar(50)  NOT NULL,
+    CONSTRAINT Guardaespaldas_Solicitud_pk PRIMARY KEY  (Guardaespaldas_CodigoGuardaespaldas,Solicitud_CodigoSolicitud)
+);
+
+-- Table: Horario
+CREATE TABLE Horario (
+    CodigoHorario varchar(50)  NOT NULL,
+    DiaInicio varchar(50)  NOT NULL,
+    DiaFin varchar(50)  NOT NULL,
+    HoraInicio time(7)  NOT NULL,
+    HoraFin time(7)  NOT NULL,
+    Remuneracion money  NOT NULL,
+    CONSTRAINT Horario_pk PRIMARY KEY  (CodigoHorario)
+);
+
+-- Table: MetodoDePago
+CREATE TABLE MetodoDePago (
+    CodigoMetodo varchar(50)  NOT NULL,
+    NombreMetodo varchar(50)  NOT NULL,
+    CONSTRAINT MetodoDePago_pk PRIMARY KEY  (CodigoMetodo)
+);
+
+-- Table: Solicitud
+CREATE TABLE Solicitud (
+    CodigoSolicitud varchar(50)  NOT NULL,
+    FechaHoraInicio datetime  NOT NULL,
+    FechaHoraFin datetime  NOT NULL,
+    Costo money  NOT NULL,
+    Direccion varchar(50)  NOT NULL,
+    Vehiculo_CodigoVehiculo varchar(50)  NOT NULL,
+    Cliente_CodigoCliente varchar(50)  NOT NULL,
+    CONSTRAINT Solicitud_pk PRIMARY KEY  (CodigoSolicitud)
+);
+
+-- Table: Vehiculo
+CREATE TABLE Vehiculo (
+    CodigoVehiculo varchar(50)  NOT NULL,
+    Placa varchar(50)  NOT NULL,
+    Modelo varchar(50)  NOT NULL,
+    Color varchar(50)  NOT NULL,
+    CONSTRAINT Vehiculo_pk PRIMARY KEY  (CodigoVehiculo)
+);
+
+-- foreign keys
+-- Reference: Boleta_Solicitud (table: Boleta)
+ALTER TABLE Boleta ADD CONSTRAINT Boleta_Solicitud
+    FOREIGN KEY (Solicitud_CodigoSolicitud)
+    REFERENCES Solicitud (CodigoSolicitud);
+
+-- Reference: Cliente_MetodDePago_Cliente (table: Cliente_MetodDePago)
+ALTER TABLE Cliente_MetodDePago ADD CONSTRAINT Cliente_MetodDePago_Cliente
+    FOREIGN KEY (Cliente_CodigoCliente)
+    REFERENCES Cliente (CodigoCliente);
+
+-- Reference: Cliente_MetodDePago_MetodoDePago (table: Cliente_MetodDePago)
+ALTER TABLE Cliente_MetodDePago ADD CONSTRAINT Cliente_MetodDePago_MetodoDePago
+    FOREIGN KEY (MetodoDePago_CodigoMetodo)
+    REFERENCES MetodoDePago (CodigoMetodo);
+
+-- Reference: Guardaespaldas_Agencia (table: Guardaespaldas)
+ALTER TABLE Guardaespaldas ADD CONSTRAINT Guardaespaldas_Agencia
+    FOREIGN KEY (Agencia_Codigo_Agencia)
+    REFERENCES Agencia (Codigo_Agencia);
+
+-- Reference: Guardaespaldas_Horario (table: Guardaespaldas)
+ALTER TABLE Guardaespaldas ADD CONSTRAINT Guardaespaldas_Horario
+    FOREIGN KEY (Horario_CodigoHorario)
+    REFERENCES Horario (CodigoHorario);
+
+-- Reference: Guardaespaldas_Solicitud_Guardaespaldas (table: Guardaespaldas_Solicitud)
+ALTER TABLE Guardaespaldas_Solicitud ADD CONSTRAINT Guardaespaldas_Solicitud_Guardaespaldas
+    FOREIGN KEY (Guardaespaldas_CodigoGuardaespaldas)
+    REFERENCES Guardaespaldas (CodigoGuardaespaldas);
+
+-- Reference: Guardaespaldas_Solicitud_Solicitud (table: Guardaespaldas_Solicitud)
+ALTER TABLE Guardaespaldas_Solicitud ADD CONSTRAINT Guardaespaldas_Solicitud_Solicitud
+    FOREIGN KEY (Solicitud_CodigoSolicitud)
+    REFERENCES Solicitud (CodigoSolicitud);
+
+-- Reference: Solicitud_Cliente (table: Solicitud)
+ALTER TABLE Solicitud ADD CONSTRAINT Solicitud_Cliente
+    FOREIGN KEY (Cliente_CodigoCliente)
+    REFERENCES Cliente (CodigoCliente);
+
+-- Reference: Solicitud_Vehiculo (table: Solicitud)
+ALTER TABLE Solicitud ADD CONSTRAINT Solicitud_Vehiculo
+    FOREIGN KEY (Vehiculo_CodigoVehiculo)
+    REFERENCES Vehiculo (CodigoVehiculo);
+
+-- End of file.
